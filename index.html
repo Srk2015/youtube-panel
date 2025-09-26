@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>YouTube Otomasyonu – Detaylı Kontrol Paneli</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+    }
+    .progress-bar {
+      width: 100%;
+      background-color: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 15px 0;
+    }
+    .progress {
+      height: 20px;
+      background-color: #4CAF50;
+      width: 0%;
+      transition: width 0.4s;
+    }
+    .step {
+      margin: 15px 0;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      border-left: 4px solid #007bff;
+    }
+    button {
+      padding: 8px 16px;
+      margin: 4px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .status {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #e9ecef;
+      border-radius: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🎬 YouTube Otomasyonu – Detaylı Kontrol Paneli</h1>
+
+  <div class="progress-bar">
+    <div class="progress" id="progressBar"></div>
+  </div>
+  <p>Adım: <span id="currentStep">0</span>/6</p>
+
+  <div class="step">
+    <h3>1. AI ile Fikir Üret</h3>
+    <button onclick="runStep(1)">🧪 Test Et</button>
+    <div class="status" id="step1Status">Bekleniyor...</div>
+  </div>
+
+  <div class="step">
+    <h3>2. AI ile Senaryo Yaz</h3>
+    <button onclick="runStep(2)">🧪 Test Et</button>
+    <div class="status" id="step2Status">Bekleniyor...</div>
+  </div>
+
+  <div class="step">
+    <h3>3. AI ile Ses Oluştur</h3>
+    <button onclick="runStep(3)">🧪 Test Et</button>
+    <div class="status" id="step3Status">Bekleniyor...</div>
+  </div>
+
+  <div class="step">
+    <h3>4. Video Oluştur</h3>
+    <button onclick="runStep(4)">🧪 Test Et</button>
+    <div class="status" id="step4Status">Bekleniyor...</div>
+  </div>
+
+  <div class="step">
+    <h3>5. YouTube’a Yükle</h3>
+    <button onclick="runStep(5)">🧪 Test Et</button>
+    <div class="status" id="step5Status">Bekleniyor...</div>
+  </div>
+
+  <div class="step">
+    <h3>6. Tüm Sistemi Başlat</h3>
+    <button onclick="runFullProcess()">🎬 Video Oluştur ve Yayınla</button>
+    <div class="status" id="step6Status">Bekleniyor...</div>
+  </div>
+
+  <div class="card">
+    <h3>📜 Sistem Günlüğü</h3>
+    <div id="log" style="background-color: #eee; padding: 10px; height: 200px; overflow-y: scroll;">
+      Sistem başlatılmadı.
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentStep = 0;
+  const totalSteps = 6;
+
+  function addLog(message) {
+    const now = new Date().toLocaleTimeString();
+    const logDiv = document.getElementById('log');
+    logDiv.innerHTML += `<br>${now}: ${message}`;
+    logDiv.scrollTop = logDiv.scrollHeight;
+  }
+
+  function updateProgress() {
+    const progress = (currentStep / totalSteps) * 100;
+    document.getElementById('progressBar').style.width = `${progress}%`;
+    document.getElementById('currentStep').innerText = currentStep;
+  }
+
+  function runStep(step) {
+    const statuses = {
+      1: "AI fikir üretiyor...",
+      2: "AI senaryo yazıyor...",
+      3: "AI ses oluşturuyor...",
+      4: "Video oluşturuluyor...",
+      5: "YouTube'a yükleniyor..."
+    };
+
+    document.getElementById(`step${step}Status`).innerText = statuses[step];
+    addLog(`Adım ${step}: ${statuses[step]}`);
+
+    if (step > currentStep) {
+      currentStep = step;
+      updateProgress();
+    }
+
+    setTimeout(() => {
+      document.getElementById(`step${step}Status`).innerText = `✅ Adım ${step} tamamlandı.`;
+      addLog(`Adım ${step} tamamlandı.`);
+    }, 1000);
+  }
+
+  function runFullProcess() {
+    document.getElementById('step6Status').innerText = '🎬 Video oluşturuluyor...';
+    addLog('Video oluşturma süreci başlatıldı.');
+
+    // Webhook isteği
+    fetch('https://srk123.app.n8n.cloud/webhook-test/faf30598-6da9-46a5-9de9-27d480089e50', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: "create_video" })
+    })
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('step6Status').innerText = '✅ Video YouTube’a yüklendi!';
+      addLog('Video YouTube’a yüklendi.');
+      currentStep = 6;
+      updateProgress();
+    })
+    .catch(error => {
+      console.error('Hata:', error);
+      document.getElementById('step6Status').innerText = '❌ Hata oluştu.';
+      addLog('Hata: Video yüklenemedi.');
+    });
+  }
+</script>
+
+</body>
+</html>
